@@ -9,7 +9,7 @@ GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 def enviar_telegram(mensagem):
     chat_id_limpo = str(TELEGRAM_CHAT_ID).strip()
     url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN.strip()}/sendMessage"
-    payload = {"chat_id": chat_id_limpo, "text": mensagem, "parse_mode": "Markdown"}
+    payload = {"chat_id": chat_id_limpo, "text": mensagem}
     
     resposta = requests.post(url, json=payload)
     dados = resposta.json()
@@ -22,7 +22,7 @@ def enviar_telegram(mensagem):
 def analisar_dominios():
     client = genai.Client(api_key=GEMINI_API_KEY)
 
-    # Lista de alvos para varredura diária de alta conversão
+    # Adicione aqui novos domínios que deseja monitorar ou pesquisar
     dominios_para_testar = [
         "solarvendas.com.br",
         "advocaciabrasil24h.com.br",
@@ -31,12 +31,11 @@ def analisar_dominios():
 
     for dominio in dominios_para_testar:
         prompt = f"""
-        Aja como um vendedor de elite especialista em Domain Flipping agressivo no Brasil.
-        Avalie o domínio '{dominio}' e crie um dossiê comercial para fechar a venda rapidamente com um empresário do setor.
-        Responda obrigatoriamente estruturado em:
-        1. Potencial Comercial (Baixo, Médio ou Alto).
-        2. Perfil do Comprador Ideal (quem precisa disso hoje).
-        3. Script de Abordagem Comercial Ultra-Agressivo: um texto pronto para o usuário copiar e enviar via WhatsApp/E-mail ao empresário, usando forte escassez (prazo de 48h), proteção de marca e alerta de prejuízo por roubo de tráfego de concorrentes.
+        Avalie o domínio '{dominio}' para revenda (Domain Flipping) no Brasil.
+        Responda de forma direta:
+        1. Potencial Comercial (Baixo, Médio ou Alto)
+        2. Qual tipo de empresa compraria esse domínio?
+        3. Sugestão rápida de abordagem para venda.
         """
         
         try:
@@ -46,7 +45,7 @@ def analisar_dominios():
             )
             resultado = response.text
             
-            msg = f"🎯 *ALVO DE DOMÍNIO DETECTADO*\n\n🌐 *Domínio:* `{dominio}`\n\n{resultado}"
+            msg = f"🌐 *Domínio:* {dominio}\n\n📋 *Análise:*\n{resultado}"
             enviar_telegram(msg)
             
         except Exception as e:
