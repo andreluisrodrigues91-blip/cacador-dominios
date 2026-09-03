@@ -23,22 +23,31 @@ def enviar_telegram(mensagem):
 def analisar_dominios():
     client = genai.Client(api_key=GEMINI_API_KEY)
 
+    # Lista expansível de alvos para a sua máquina de vendas
     dominios_para_testar = [
-        "solarvendas.com.br"
+        "solarvendas.com.br",
+        "advocaciabrasil24h.com.br",
+        "clinicasorrirmais.com.br"
     ]
 
     for dominio in dominios_para_testar:
-        prompt = f"Avalie o domínio '{dominio}' para revenda em 2 linhas. Diga se o potencial é Alto ou Baixo."
+        prompt = f"""
+        Aja como um vendedor de elite especialista em Domain Flipping no Brasil. 
+        Avalie o domínio '{dominio}' e forneça de forma direta:
+        1. Potencial Comercial (Alto ou Baixo).
+        2. Perfil do comprador ideal.
+        3. Script de abordagem comercial agressivo com escassez de 48h para o empresário via WhatsApp.
+        """
         
         try:
-            # Usando o modelo padrão estável
+            # Usando o modelo estável validado
             response = client.models.generate_content(
                 model='gemini-3.6-flash',
                 contents=prompt,
             )
             resultado = response.text
             
-            msg = f"🌐 Domínio: {dominio}\n\n📋 Análise:\n{resultado}"
+            msg = f"🎯 ALVO DETECTADO: {dominio}\n\n{resultado}"
             enviar_telegram(msg)
             
         except Exception as e:
