@@ -19,7 +19,6 @@ def enviar_telegram(mensagem):
         print("✅ Mensagem enviada com sucesso para o Telegram!")
 
 def analisar_dominios():
-    # Inicializa o cliente oficial moderno da SDK
     client = genai.Client(api_key=GEMINI_API_KEY)
 
     dominios_para_testar = [
@@ -31,18 +30,17 @@ def analisar_dominios():
     for dominio in dominios_para_testar:
         prompt = f"""
         Avalie o domínio '{dominio}' para revenda em 3 linhas.
-        Responda obrigatoriamente se o Potencial é Alto, Médio ou Baixo e uma sugestão rápida de venda.
+        Responda se o Potencial é Alto, Médio ou Baixo e uma sugestão rápida de venda.
         """
         
         try:
-            # Chama o modelo atualizado gemini-2.5-flash
             response = client.models.generate_content(
                 model='gemini-2.5-flash',
                 contents=prompt,
             )
             resultado = response.text
             
-            msg = f"🌐 *Domínio:* {dominio}\n\n📋 *Análise da IA:*\n{resultado}"
+            msg = f"🌐 Domínio: {dominio}\n\n📋 Análise da IA:\n{resultado}"
             enviar_telegram(msg)
             
         except Exception as e:
