@@ -28,10 +28,7 @@ def analisar_dominios():
     ]
 
     for dominio in dominios_para_testar:
-        prompt = f"""
-        Avalie o domínio '{dominio}' para revenda em 3 linhas.
-        Responda se o Potencial é Alto, Médio ou Baixo e uma sugestão rápida de venda.
-        """
+        prompt = f"Avalie o domínio '{dominio}' para revenda em 3 linhas. Responda se o Potencial é Alto, Médio ou Baixo e dê uma sugestão."
         
         try:
             response = client.models.generate_content(
